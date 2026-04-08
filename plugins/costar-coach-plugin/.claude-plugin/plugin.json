@@ -1,7 +1,22 @@
 {
   "author": {
-    "name": "alexxyjiang (Alex Jiang)"
+    "name": "alexxyjiang (Alex Jiang)",
+    "email": "alexxyjiang@gmail.com"
   },
   "name": "costar-coach-plugin",
-  "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response), and executes the generated prompts to provide detailed and actionable responses when necessary."
+  "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response), and executes the generated prompts to provide detailed and actionable responses when necessary.",
+  "keywords": [
+    "costar",
+    "prompt-engineering",
+    "prompt-optimization",
+    "prompt-framework",
+    "prompt-coach",
+    "context",
+    "objective",
+    "style",
+    "tone",
+    "audience",
+    "response"
+  ],
+  "version": "1.0.1"
 }

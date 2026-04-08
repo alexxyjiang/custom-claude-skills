@@ -1,12 +1,13 @@
 ---
 name: costar-coach
 description: This skill should be used when the user asks to "convert to COSTAR", "make this a COSTAR prompt", "rewrite as COSTAR", "improve this prompt", "structure this prompt", mentions "COSTAR framework", or wants to turn a plain description into a well-structured prompt using the COSTAR methodology (Context, Objective, Style, Tone, Audience, Response).
-version: 1.0.0
+version: 1.0.1
+argument-hint: "[file-path] (optional) — path to a prompt file to load and optimize using the COSTAR framework"
 ---
 
 # COSTAR Coach
 
-Converts a human-language description or rough idea into a well-structured prompt using the **COSTAR framework**.
+Converts a human-language description or idea into a well-structured prompt using the **COSTAR framework**, then hands off to `costar-execute` so the user can run it immediately.
 
 ## COSTAR Framework
 
@@ -20,6 +21,14 @@ The COSTAR framework breaks down prompt engineering into six essential elements:
 | **T** -- Tone         | Set the emotional quality of the response. Whether you need formal, friendly, cautious, or enthusiastic responses, explicitly stating the tone helps ensure the output feels right for your use case. (e.g., professional, friendly, direct) |
 | **A** -- Audience     | Identify who will be reading or using this output. The model can tailor vocabulary, complexity, and examples based on whether the audience is technical developers, business executives, or the general public. |
 | **R** -- Response     | The expected format or structure of the output, whether that's paragraphs of text, JSON, CSV, or something else. This is particularly important when integrating AI outputs into existing systems or workflows. Specifying the response format helps ensure the output is immediately usable and reduces the need for additional parsing or formatting steps. |
+
+## File Argument
+
+If a file path is provided as an argument (e.g., `/costar-coach path/to/prompt.md`):
+
+1. **Load the file** -- Read the contents of the file at the given path.
+2. **Use it as input** -- Treat the file contents as the raw prompt or description to be optimized, instead of waiting for the user to describe it in chat.
+3. **Proceed normally** -- Apply all the steps below to convert and structure the loaded content into a COSTAR prompt.
 
 ## When This Skill Applies
 
@@ -67,9 +76,15 @@ Present the result as:
 <expected output format>
 ```
 
-Then optionally append the assembled prompt as a single cohesive block the user can copy directly.
+### Assembled prompt (always include)
 
-## Examples
+The assembled prompt is a single cohesive block the user can copy directly.
+
+```
+<all six components woven into a single, ready-to-use prompt block>
+```
+
+## Example
 
 **Input:**
 > Write something to explain machine learning to my manager

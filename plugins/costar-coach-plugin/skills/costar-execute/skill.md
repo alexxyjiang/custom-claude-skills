@@ -1,12 +1,12 @@
 ---
 name: costar-execute
 description: Triggers immediately after `costar-coach` finishes generating a COSTAR-structured prompt. Ask the user whether to execute the prompt now. If yes, use the COSTAR prompt as the actual instruction and carry out the task. If no, leave the prompt for the user to copy and use manually. Always invoke this skill at the end of every `costar-coach` run -- do not skip it.
-version: 1.0.0
+version: 1.0.1
 ---
 
 # COSTAR Execute
 
-This skill runs as the natural follow-up to `costar-coach`. After a COSTAR prompt has been constructed and shown to the user, offer to execute it immediately.
+This skill closes the loop after `costar-coach`. Once a COSTAR prompt has been built and shown, offer to execute it immediately -- so the user doesn't have to copy and re-paste it themselves.
 
 ## When This Skill Applies
 
@@ -19,20 +19,23 @@ Invoke this skill at the end of every `costar-coach` response, after the COSTAR 
 2. **Ask the user** -- After presenting the COSTAR prompt, append this confirmation:
 
    > **Ready to run this prompt?**
-   > - Type **yes** (or **y**) to execute it now.
-   > - Type **no** (or **n**) to keep it for manual use.
+   > - **yes** -- execute it now
+   > - **no** -- keep it to copy and use manually
+   > - **yes, but…** -- make a change first, then run it
 
 3. **Handle the response:**
 
-   - **Yes / Y** -- Take the full assembled COSTAR prompt and treat it as your new instruction. Execute the task it describes immediately, producing the output the COSTAR prompt specifies. Do not re-show the COSTAR structure; just do the work and return the result.
+   - **Yes / Y** -- Take the full assembled COSTAR prompt and treat it as your new instruction. Execute the task it describes immediately, producing the output the COSTAR prompt specifies. Produce the output directly -- no preamble, no re-display of the COSTAR structure.
 
-   - **No / N** -- Acknowledge briefly. Let the user know the prompt is ready to copy above. Do not execute anything.
+   - **Yes, but [modification]** -- Apply the requested change to the relevant COSTAR component, show the updated assembled prompt briefly, then execute it.
 
-   - **Anything else / ambiguous** -- Gently re-ask with the two options.
+   - **No / N** -- Acknowledge briefly: *"Got it -- the prompt is ready above whenever you need it."*
+
+   - **Anything else / ambiguous** -- Re-ask with the three options above.
 
 ## Why This Matters
 
-`costar-coach` helps the user *structure* their intent; `costar-execute` closes the loop by letting them act on it immediately. Without this step, the user has to manually copy the prompt and re-submit it -- extra friction that breaks the flow.
+`costar-coach` structures the user's intent; `costar-execute` lets them act on it without any extra steps. Skipping this step means the user has to manually copy the prompt and re-submit it -- friction that breaks the flow.
 
 ## Example
 
@@ -61,9 +64,12 @@ A 200 - 300 words explanation suitable for an email or brief slide note.
 Append:
 
 > **Ready to run this prompt?**
-> - Type **yes** to execute it now.
-> - Type **no** to keep it for manual use.
+> - **yes** -- execute it now
+> - **no** -- keep it to copy and use manually
+> - **yes, but…** -- make a change first, then run it
 
-If the user says **yes**, produce the 200 –300 words machine learning explanation immediately -- don't repeat the COSTAR breakdown.
+**If the user says "yes":** Produce the 200 –300 words machine learning explanation immediately -- don't repeat the COSTAR breakdown.
 
-If the user says **no**, respond with something like: "Got it -- the prompt is ready above whenever you need it."
+**If the user says "yes, but make it shorter":** Update [Response] to target ~100 words, show the updated assembled prompt, then write the shorter explanation.
+
+**If the user says "no":** *"Got it -- the prompt is ready above whenever you need it."*

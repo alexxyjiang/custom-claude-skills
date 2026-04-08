@@ -1,13 +1,19 @@
 {
   "name": "custom-claude-skills",
   "owner": {
-    "name": "alexxyjiang (Alex Jiang)"
+    "name": "alexxyjiang (Alex Jiang)",
+    "email": "alexxyjiang@gmail.com"
   },
   "plugins": [
     {
       "name": "costar-coach-plugin",
       "source": "./plugins/costar-coach-plugin",
       "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response), and executes the generated prompts to provide detailed and actionable responses when necessary."
+    },
+    {
+      "name": "crispe-coach-plugin",
+      "source": "./plugins/crispe-coach-plugin",
+      "description": "Converts rough descriptions or ideas into well-structured prompts using the CRISPE framework (Context, Role, Instruction, Specification, Performance, Example), and executes the generated prompts to provide detailed and actionable responses when necessary."
     }
   ]
 }
