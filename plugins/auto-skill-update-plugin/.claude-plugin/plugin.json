@@ -1,0 +1,18 @@
+{
+  "author": {
+    "email": "alexxyjiang@gmail.com",
+    "name": "alexxyjiang (Alex Jiang)"
+  },
+  "name": "auto-skill-update-plugin",
+  "description": "Automatically detects when a skill was recently used and the user signals it should be improved, then applies minimal, surgical edits to the skill definition -- covering new trigger patterns, handling cases, or examples without rewriting wholesale.",
+  "keywords": [
+    "skill",
+    "skill-update",
+    "skill-improvement",
+    "auto-update",
+    "feedback",
+    "meta-skill",
+    "prompt-engineering"
+  ],
+  "version": "1.0.0"
+}

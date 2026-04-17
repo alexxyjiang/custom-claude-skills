@@ -14,6 +14,11 @@
       "name": "crispe-coach-plugin",
       "source": "./plugins/crispe-coach-plugin",
       "description": "Converts rough descriptions or ideas into well-structured prompts using the CRISPE framework (Context, Role, Instruction, Specification, Performance, Example), and executes the generated prompts to provide detailed and actionable responses when necessary."
+    },
+    {
+      "name": "auto-skill-update-plugin",
+      "source": "./plugins/auto-skill-update-plugin",
+      "description": "Automatically detects when a skill was recently used and the user signals it should be improved, then applies minimal, surgical edits to the skill definition -- covering new trigger patterns, handling cases, or examples without rewriting wholesale."
     }
   ]
 }
