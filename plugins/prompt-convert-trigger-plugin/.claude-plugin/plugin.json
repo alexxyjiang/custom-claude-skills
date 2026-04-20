@@ -1,0 +1,20 @@
+{
+  "author": {
+    "name": "alexxyjiang (Alex Jiang)",
+    "email": "alexxyjiang@gmail.com"
+  },
+  "name": "prompt-convert-trigger-plugin",
+  "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work.",
+  "keywords": [
+    "prompt-engineering",
+    "task-complexity",
+    "costar",
+    "crispe",
+    "automatic-conversion",
+    "prompt-framework",
+    "multi-step-tasks",
+    "structured-prompting",
+    "task-detection"
+  ],
+  "version": "1.0.0"
+}

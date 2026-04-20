@@ -19,6 +19,11 @@
       "name": "auto-skill-update-plugin",
       "source": "./plugins/auto-skill-update-plugin",
       "description": "Automatically detects when a skill was recently used and the user signals it should be improved, then applies minimal, surgical edits to the skill definition -- covering new trigger patterns, handling cases, or examples without rewriting wholesale."
+    },
+    {
+      "name": "prompt-convert-trigger-plugin",
+      "source": "./plugins/prompt-convert-trigger-plugin",
+      "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work."
     }
   ]
 }
