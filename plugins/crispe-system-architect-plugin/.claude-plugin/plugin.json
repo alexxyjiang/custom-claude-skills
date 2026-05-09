@@ -1,0 +1,19 @@
+{
+  "author": {
+    "name": "alexxyjiang (Alex Jiang)",
+    "email": "alexxyjiang@gmail.com"
+  },
+  "name": "crispe-system-architect-plugin",
+  "description": "Analyzes a code repository and generates a structured architectural reference file (STRUCTURE.md for human contributors or CLAUDE.md for Claude Code context) using the CRISPE framework. Proactively triggers before code changes when no architectural overview exists.",
+  "keywords": [
+    "crispe",
+    "architecture",
+    "structure",
+    "system-architect",
+    "codebase-overview",
+    "repository-analysis",
+    "documentation",
+    "onboarding"
+  ],
+  "version": "1.0.0"
+}

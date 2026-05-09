@@ -24,6 +24,11 @@
       "name": "prompt-convert-trigger-plugin",
       "source": "./plugins/prompt-convert-trigger-plugin",
       "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work."
+    },
+    {
+      "name": "crispe-system-architect-plugin",
+      "source": "./plugins/crispe-system-architect-plugin",
+      "description": "Analyzes a code repository and generates a structured architectural reference file (STRUCTURE.md for human contributors or CLAUDE.md for Claude Code context) using the CRISPE framework. Proactively triggers before code changes when no architectural overview exists."
     }
   ]
 }
