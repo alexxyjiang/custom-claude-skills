@@ -1,13 +1,13 @@
 ---
 name: costar-coach
 description: This skill should be used when the user asks to "convert to COSTAR", "make this a COSTAR prompt", "rewrite as COSTAR", "improve this prompt", "structure this prompt", mentions "COSTAR framework", or wants to turn a plain description into a well-structured prompt using the COSTAR methodology (Context, Objective, Style, Tone, Audience, Response).
-version: 1.0.1
-argument-hint: "[file-path] (optional) — path to a prompt file to load and optimize using the COSTAR framework"
+version: 1.1.0
+argument-hint: "[file-path] (optional) -- path to a prompt file to load and optimize using the COSTAR framework"
 ---
 
 # COSTAR Coach
 
-Converts a human-language description or idea into a well-structured prompt using the **COSTAR framework**, then hands off to `costar-execute` so the user can run it immediately.
+Converts a human-language description or idea into a well-structured prompt using the **COSTAR framework**, then offers to execute it immediately so the user doesn't have to copy and re-paste it themselves.
 
 ## COSTAR Framework
 
@@ -50,7 +50,22 @@ Activate when the user:
 
 5. **Iterate if needed** -- Ask clarifying questions only when a key component is truly ambiguous and cannot be inferred.
 
-6. **Hand off to costar-execute** -- After presenting the COSTAR prompt, invoke the `costar-execute` skill to ask the user whether to run it immediately.
+6. **Offer to execute** -- After presenting the COSTAR prompt, append this confirmation:
+
+   > **Ready to run this prompt?**
+   > - **yes** -- execute it now
+   > - **no** -- keep it to copy and use manually
+   > - **yes, but... ** -- make a change first, then run it
+
+7. **Handle the response:**
+
+   - **Yes / Y** -- Take the full assembled COSTAR prompt and treat it as your new instruction. Execute the task it describes immediately, producing the output the COSTAR prompt specifies. Produce the output directly -- no preamble, no re-display of the COSTAR structure.
+
+   - **Yes, but [modification]** -- Apply the requested change to the relevant COSTAR component, show the updated assembled prompt briefly, then execute it.
+
+   - **No / N** -- Acknowledge briefly: *"Got it -- the prompt is ready above whenever you need it."*
+
+   - **Anything else / ambiguous** -- Re-ask with the three options above.
 
 ## Output Format
 
@@ -109,3 +124,16 @@ A business manager with no technical background in AI or software development.
 [Response]
 A 200 - 300 words explanation suitable for an email or brief slide note.
 ```
+
+Then append:
+
+> **Ready to run this prompt?**
+> - **yes** -- execute it now
+> - **no** -- keep it to copy and use manually
+> - **yes, but... ** -- make a change first, then run it
+
+**If the user says "yes":** Produce the 200 -- 300 word machine learning explanation immediately -- don't repeat the COSTAR breakdown.
+
+**If the user says "yes, but make it shorter":** Update [Response] to target ~100 words, show the updated assembled prompt, then write the shorter explanation.
+
+**If the user says "no":** *"Got it -- the prompt is ready above whenever you need it."*
