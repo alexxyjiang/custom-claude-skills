@@ -4,7 +4,7 @@
     "email": "alexxyjiang@gmail.com"
   },
   "name": "crispe-system-architect-plugin",
-  "description": "Analyzes a code repository and generates a structured architectural reference file (STRUCTURE.md for human contributors or CLAUDE.md for Claude Code context) using the CRISPE framework. Proactively triggers before code changes when no architectural overview exists.",
+  "description": "Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles: Choice 1 (CONTRIBUTING.md + STRUCTURE.md), Choice 2 (CLAUDE.md only), Choice 3 (STRUCTURE.md only). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent. Proactively triggers before code changes when no architectural overview exists.",
   "keywords": [
     "crispe",
     "architecture",
@@ -13,7 +13,8 @@
     "codebase-overview",
     "repository-analysis",
     "documentation",
-    "onboarding"
+    "onboarding",
+    "contributing"
   ],
-  "version": "1.0.0"
+  "version": "1.1.0"
 }
