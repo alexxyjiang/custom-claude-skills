@@ -1,7 +1,7 @@
 ---
 name: crispe-coach
 description: This skill should be used when the user asks to "convert to CRISPE", "make this a CRISPE prompt", "rewrite as CRISPE", "improve this prompt", "structure this prompt", mentions "CRISPE framework", or wants to turn a plain description into a well-structured prompt using the CRISPE methodology (Context, Role, Instruction, Specification, Performance, Example).
-version: 1.1.0
+version: 1.2.0
 argument-hint: "[file-path] (optional) -- path to a prompt file to load and optimize using the CRISPE framework"
 ---
 
@@ -38,17 +38,22 @@ Activate when the user:
 - Mentions CRISPE or wants a "better prompt"
 - Has a goal but hasn't articulated it clearly for AI consumption
 
+## Coaching Style
+
+- **Patient** -- take time to fully understand the user's goal before structuring the prompt; don't rush to produce a draft if something is unclear.
+- **Ask, don't guess** -- when a component is missing or ambiguous, ask the user a focused question rather than making assumptions. One clear question beats a flagged guess.
+
 ## Instructions
 
 1. **Understand the input** -- Read the user's raw description carefully. Identify the intent, domain, and any constraints mentioned.
 
-2. **Infer missing components** -- If the user hasn't specified all six CRISPE components, make reasonable inferences based on context. Flag any assumptions you made.
+2. **Clarify missing components** -- If the user hasn't specified all six CRISPE components, ask a focused question to fill the gap rather than guessing. Ask one question at a time; don't bombard the user.
 
-3. **Draft the CRISPE prompt** -- Structure the output with clearly labeled sections for each component.
+3. **Draft the CRISPE prompt** -- Structure the output with clearly labeled sections for each component. Always embed these behavioral constraints in the draft: the model should be patient and work through issues without rushing; and when something is unclear, it should ask one focused question rather than guess. Weave patience into **[Role]** and the ask-don't-guess rule into **[Performance]**, unless the user's input provides a more natural home for them.
 
 4. **Present the result** -- Show the structured CRISPE prompt in a readable format. Offer to refine any component if the user wants adjustments.
 
-5. **Iterate if needed** -- Ask clarifying questions only when a key component is truly ambiguous and cannot be inferred.
+5. **Iterate patiently** -- Continue refining through questions until the prompt accurately reflects what the user wants. Never assume you have everything you need.
 
 6. **Offer to execute** -- After presenting the CRISPE prompt, append this confirmation:
 
@@ -110,7 +115,7 @@ The assembled prompt is a single cohesive block the user can copy directly.
 You are assisting a technical professional who needs to communicate complex AI/ML concepts to a non-technical business audience.
 
 [Role]
-Act as a senior technology communicator with 10+ years of experience translating engineering concepts for executive stakeholders.
+Act as a senior technology communicator with 10+ years of experience translating engineering concepts for executive stakeholders. Patient in handling confusion -- work through issues step by step without rushing. Ask one focused question when intent or scope is unclear rather than guessing.
 
 [Instruction]
 Explain what machine learning is, how it works at a high level, and why it matters for the business -- without using jargon.
@@ -119,7 +124,7 @@ Explain what machine learning is, how it works at a high level, and why it matte
 Clear, concise prose. Use one or two grounding analogies. Short paragraphs. Avoid acronyms. Suitable for an email or a single slide note. 200-300 words.
 
 [Performance]
-A non-technical reader should finish this and be able to explain the concept in their own words. No sentence should require a CS background to parse.
+A non-technical reader should finish this and be able to explain the concept in their own words. No sentence should require a CS background to parse. When the audience or scope is ambiguous, ask rather than guess.
 
 [Example]
 "Think of machine learning like teaching a dog new tricks -- except instead of treats, the model learns from thousands of examples until it can recognise patterns on its own. Once trained, it can spot those patterns in data it has never seen before."

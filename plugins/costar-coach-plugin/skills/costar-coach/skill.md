@@ -1,7 +1,7 @@
 ---
 name: costar-coach
 description: This skill should be used when the user asks to "convert to COSTAR", "make this a COSTAR prompt", "rewrite as COSTAR", "improve this prompt", "structure this prompt", mentions "COSTAR framework", or wants to turn a plain description into a well-structured prompt using the COSTAR methodology (Context, Objective, Style, Tone, Audience, Response).
-version: 1.1.0
+version: 1.2.0
 argument-hint: "[file-path] (optional) -- path to a prompt file to load and optimize using the COSTAR framework"
 ---
 
@@ -38,17 +38,22 @@ Activate when the user:
 - Mentions COSTAR or wants a "better prompt"
 - Has a goal but hasn't articulated it clearly for AI consumption
 
+## Coaching Style
+
+- **Patient** -- take time to fully understand the user's goal before structuring the prompt; don't rush to produce a draft if something is unclear.
+- **Ask, don't guess** -- when a component is missing or ambiguous, ask the user a focused question rather than making assumptions. One clear question beats a flagged guess.
+
 ## Instructions
 
 1. **Understand the input** -- Read the user's raw description carefully. Identify the intent, domain, and any constraints mentioned.
 
-2. **Infer missing components** -- If the user hasn't specified all six COSTAR components, make reasonable inferences based on context. Flag any assumptions you made.
+2. **Clarify missing components** -- If the user hasn't specified all six COSTAR components, ask a focused question to fill the gap rather than guessing. Ask one question at a time; don't bombard the user.
 
-3. **Draft the COSTAR prompt** -- Structure the output with clearly labeled sections for each component.
+3. **Draft the COSTAR prompt** -- Structure the output with clearly labeled sections for each component. Always embed these behavioral constraints in the draft: the model should be patient and work through issues without rushing; and when something is unclear, it should ask one focused question rather than guess. Place patience in **[Tone]** and the ask-don't-guess rule in **[Style]**, unless the user's input provides a more natural home for them.
 
 4. **Present the result** -- Show the structured COSTAR prompt in a readable format. Offer to refine any component if the user wants adjustments.
 
-5. **Iterate if needed** -- Ask clarifying questions only when a key component is truly ambiguous and cannot be inferred.
+5. **Iterate patiently** -- Continue refining through questions until the prompt accurately reflects what the user wants. Never assume you have everything you need.
 
 6. **Offer to execute** -- After presenting the COSTAR prompt, append this confirmation:
 
@@ -113,10 +118,10 @@ You are assisting a technical professional who needs to communicate complex AI/M
 Explain what machine learning is, how it works at a high level, and why it matters for the business -- without using jargon.
 
 [Style]
-Clear, concise prose with an analogy or two to ground abstract concepts. Use short paragraphs.
+Clear, concise prose with an analogy or two to ground abstract concepts. Use short paragraphs. When something is unclear, ask one focused question rather than guess.
 
 [Tone]
-Professional yet approachable. Confident but not condescending.
+Professional yet approachable. Confident but not condescending. Patient -- work through the reader's confusion step by step without rushing.
 
 [Audience]
 A business manager with no technical background in AI or software development.

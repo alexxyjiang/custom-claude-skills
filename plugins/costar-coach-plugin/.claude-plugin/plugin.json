@@ -4,7 +4,7 @@
     "email": "alexxyjiang@gmail.com"
   },
   "name": "costar-coach-plugin",
-  "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response), and executes the generated prompts to provide detailed and actionable responses when necessary.",
+  "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response). Coaches patiently -- asks one focused question when a component is missing rather than guessing -- and embeds the same patient, ask-don't-guess behavior into every generated prompt. Offers to execute the prompt immediately after presenting it.",
   "keywords": [
     "costar",
     "prompt-engineering",
@@ -18,5 +18,5 @@
     "audience",
     "response"
   ],
-  "version": "1.1.0"
+  "version": "1.2.0"
 }
