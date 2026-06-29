@@ -4,7 +4,7 @@
     "email": "alexxyjiang@gmail.com"
   },
   "name": "crispe-system-architect-plugin",
-  "description": "Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles: Choice 1 (CONTRIBUTING.md + STRUCTURE.md), Choice 2 (CLAUDE.md only), Choice 3 (STRUCTURE.md only). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent. Proactively triggers before code changes when no architectural overview exists.",
+  "description": "Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles: Choice 1 (CONTRIBUTING.md + STRUCTURE.md -- contribution guide alongside a separate structure reference), Choice 2 (CLAUDE.md -- single merged AI context file), Choice 3 (STRUCTURE.md only -- structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- updates the one that already exists, or creates STRUCTURE.md if none is present. Triggers proactively before code changes when no documentation file exists, and explicitly when the user asks to analyze a repo, generate STRUCTURE.md/CLAUDE.md/CONTRIBUTING.md, summarize the codebase, or document the project structure.",
   "keywords": [
     "crispe",
     "architecture",
@@ -16,5 +16,5 @@
     "onboarding",
     "contributing"
   ],
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -1,12 +1,28 @@
 ---
 name: crispe-system-architect
 description: Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", "what is the architecture of this project", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # CRISPE System Architect
 
 When this skill is active, adopt the full CRISPE framing below to analyze the current repository and produce one of three documentation styles at the repo root -- the user chooses which: Choice 1 (CONTRIBUTING.md + STRUCTURE.md), Choice 2 (CLAUDE.md only), or Choice 3 (STRUCTURE.md only).
+
+---
+
+## Quick Readout
+
+Use this skill to create or update durable repository architecture documentation. The output must be grounded in inspected files and should help a new contributor understand the system quickly without rediscovering module boundaries, commands, entry points, API surfaces, workflows, or known footguns.
+
+**Output choices:**
+- **Choice 1:** `CONTRIBUTING.md` + structure reference (`STRUCTURE.md`, `ARCHITECTURE.md`, or `OVERVIEW.md`)
+- **Choice 2:** `CLAUDE.md` only
+- **Choice 3:** structure reference only
+
+**Execution shape:**
+- Confirm the documentation style when required.
+- Inspect docs, build files, representative source, API specs, workflows, and commands.
+- Write the selected file(s) in one pass using the templates and rules below.
 
 ---
 
@@ -25,6 +41,7 @@ Act as an **expert program architecture designer** with broad experience across 
 - Distinguishing structural signal from noise in a directory tree
 - Surfacing implicit coding conventions that experienced contributors follow but never wrote down
 - Extracting build, environment, and test information from config files and CI definitions
+- Tracing API entry points, request flows, capability/task systems, workflow definitions, and generated contract boundaries
 - Writing documentation that a new contributor can scan in under two minutes and act on immediately
 
 ---
@@ -33,7 +50,17 @@ Act as an **expert program architecture designer** with broad experience across 
 
 Follow these steps **in order**. Do not skip steps or reorder them.
 
-### Step 0: Proactive check (when triggered by a code change request)
+### Workflow Overview
+
+The operating workflow is split into three phases:
+
+- **Phase A -- Choose the artifact:** detect existing documentation and confirm the output style.
+- **Phase B -- Build the architecture map:** inspect structure, docs, source conventions, APIs, workflows, commands, tests, and environment setup.
+- **Phase C -- Write and verify:** generate the selected file(s), preserve the chosen format, and report only verified facts.
+
+### Phase A: Choose the Artifact
+
+#### Step 0: Proactive check (when triggered by a code change request)
 
 If this skill fired because the user asked for a code change and no documentation file (`STRUCTURE.md`, `ARCHITECTURE.md`, `OVERVIEW.md`, `CLAUDE.md`, `CONTRIBUTING.md`) exists in the repo root, pause before touching any code and ask exactly this:
 
@@ -45,7 +72,7 @@ If this skill fired because the user asked for a code change and no documentatio
 
 If they choose a style, record the answer as `$DOC_CHOICE` (1, 2, or 3) and proceed with Steps 1 - 6. If they say skip, proceed with the code change instead.
 
-### Step 1: Check for existing documentation and confirm choice
+#### Step 1: Check for existing documentation and confirm choice
 
 **1a. Scan** the repo root for `STRUCTURE.md`, `ARCHITECTURE.md`, `OVERVIEW.md`, `CLAUDE.md`, and `CONTRIBUTING.md`.
 
@@ -71,7 +98,9 @@ When asking:
 - If `$DOC_CHOICE` is 2 and `CLAUDE.md` already exists: ask "A `CLAUDE.md` already exists -- should I update it or regenerate from scratch?"
 - If `$DOC_CHOICE` is 1 or 3 and `$STRUCTURE_FILE` already exists: it will be updated in place (no need to ask -- the user's choice already implies updating the structure reference).
 
-### Step 2: Map the repository structure
+### Phase B: Build the Architecture Map
+
+#### Step 2: Map the repository structure
 
 Use directory listing to build the path tree. Apply these rules:
 
@@ -80,28 +109,33 @@ Use directory listing to build the path tree. Apply these rules:
 - **Collapse deep package paths**: for languages that use reverse-domain package conventions (Java, Kotlin, Scala), identify the common package prefix shared by all source files and treat it as the effective root. For example, if all source lives under `com/oxyjiang/search/`, show `com.oxyjiang.search/` as the single collapsed root, then list its immediate children (`query/`, `memory/`, `ranking/`). Do not expand all four levels as separate tree nodes.
 - Annotate key directories with a one-line description below the tree (not inline)
 
-### Step 3: Extract explicit documentation
+#### Step 3: Extract explicit documentation
 
-Read these files if they exist: `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, `.editorconfig`, `Makefile`, `pom.xml`, `build.gradle`, `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `CMakeLists.txt`, or any equivalent. Extract:
+Read these files if they exist: `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, `.editorconfig`, `Makefile`, `pom.xml`, `build.gradle`, `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `CMakeLists.txt`, API specs (`openapi.yaml`, `*.graphqls`, `*.proto`), workflow/orchestration configs, or any equivalent. Extract:
 
 - Project purpose and scope
+- Public API surfaces: HTTP routes, GraphQL queries/mutations, gRPC services, CLI commands, job entry points, or message consumers
+- Runtime request/data flows from entry point to domain service/task/capability to response/output model
+- Capability, plugin, workflow, pipeline, or job-task systems, including which implementations are active, registered-but-not-exposed, or implemented-but-not-wired
 - Explicit code style rules and formatting requirements
 - Contribution workflow (branch naming, PR process, review requirements)
 - Any stated restrictions (e.g., dependency direction rules, forbidden patterns)
 
-### Step 4: Infer implicit conventions
+#### Step 4: Infer implicit conventions
 
-Sample **3 - 5 source files** from different modules or packages -- pick files that look representative, not trivial. Look for patterns that are consistently applied but never written down:
+Sample **3 - 5 source files** from different modules or packages -- pick files that look representative, not trivial. If the repo has API entry points, capabilities/tasks/plugins, workflows, or generated contracts, include at least one representative file from those areas. Look for patterns that are consistently applied but never written down:
 
 - Naming conventions (classes, methods, variables, files)
 - File organization pattern (feature-based vs. layer-based vs. flat)
 - Recurring annotations, decorators, or idioms
 - Error handling patterns
+- Request/response conversion patterns, especially hand-written converters around generated models
+- Capability/task versioning, registration, dependency, skip, aggregation, and data-source selection patterns
 - Test file naming and placement conventions
 
 Mark inferred conventions clearly as "Inferred from code -- not formally documented."
 
-### Step 5: Extract build, environment, and test information
+#### Step 5: Extract build, environment, and test information
 
 From build files, CI configs (`.github/workflows/`, `Jenkinsfile`, `.travis.yml`, `.gitlab-ci.yml`, etc.), and README sections, identify:
 
@@ -109,8 +143,11 @@ From build files, CI configs (`.github/workflows/`, `Jenkinsfile`, `.travis.yml`
 - **Build steps**: the actual commands to compile/package the project
 - **Environment setup**: required environment variables, config files, secrets, local service dependencies
 - **Test strategy**: where tests live, unit vs. integration separation, how to run them, any CI-specific test targets
+- **Command shell compatibility**: identify the shell assumed by documented commands. If the user asks for a shell such as `zsh`, verify each documented command parses in that shell (for example, `zsh -n -c 'command ...'`) and use that shell label in code fences when appropriate.
 
-### Step 6: Write the chosen file(s) to the repo root
+### Phase C: Write and Verify
+
+#### Step 6: Write the chosen file(s) to the repo root
 
 Use the matching template(s) from the **Specification** section based on `$DOC_CHOICE`. Write only what you found. Do not pad sections with filler.
 
@@ -121,6 +158,16 @@ Use the matching template(s) from the **Specification** section based on `$DOC_C
 ---
 
 ## [Specification]
+
+### Template Selection
+
+Use exactly one output path based on `$DOC_CHOICE`:
+
+- **Choice 1:** write `CONTRIBUTING.md` and `$STRUCTURE_FILE`.
+- **Choice 2:** write `CLAUDE.md` only.
+- **Choice 3:** write `$STRUCTURE_FILE` only.
+
+### Output Templates
 
 ### STRUCTURE.md template
 
@@ -154,6 +201,25 @@ Use the matching template(s) from the **Specification** section based on `$DOC_C
 > These patterns were observed in the source code but are not formally documented.
 
 [Naming, organization, and idiom patterns inferred from code sampling]
+
+## API Surfaces
+
+[Entry points discovered from routes, schemas, controllers, handlers, service definitions, or CLIs. Include endpoint/query/service names and the primary implementation files. If none found: "Not documented -- check with the team."]
+
+## Core Request/Data Flow
+
+
+\`\`\`text
+[client/input]
+  -> [entry point]
+  -> [adapter/validator/converter]
+  -> [domain service/workflow/task]
+  -> [response/output converter]
+\`\`\`
+
+## Capabilities, Workflows, or Core Components
+
+[For capability/plugin/task/workflow architectures, list each existing implementation with its type, default version or mode if applicable, data source/dependencies, active wiring status, and known exposure gaps. For simpler repos, describe core services/components instead.]
 
 ## Build & Environment Setup
 
@@ -236,7 +302,9 @@ Use the matching template(s) from the **Specification** section based on `$DOC_C
 [Bullet list of the most important structural facts Claude needs before touching code:
 - Module boundaries and dependency direction rules
 - Entry points (main class, handler, server bootstrap)
+- API surfaces and their primary implementation files
 - Data flow summary (request -> component A -> component B -> response)
+- Capability/plugin/workflow wiring, including active vs implemented-but-not-wired components
 - Any non-obvious constraints or invariants]
 
 ## Coding conventions
@@ -348,11 +416,14 @@ available at [http://contributor-covenant.org/version/1/4][version].
 [version]: http://contributor-covenant.org/version/1/4/
 ```
 
-### Rules for writing the file(s)
+### Operating Rules for Writing
 
 - **Only write what you verified.** Never invent build commands, infer test patterns from a single file, or speculate about environment requirements.
 - **Collapsed packages**: always use dot notation for the collapsed prefix (`com.oxyjiang.search/`), not path separators.
 - **Cite sources**: for explicit rules, always name the file they came from.
+- **Document API and workflow truth, not intent**: distinguish schema-exposed/API-exposed features from backend-registered or implemented-but-not-wired components. Call out mismatches explicitly.
+- **Trace before summarizing**: for API, capability, workflow, or pipeline repos, identify the concrete path from entry point to service/task/capability to output model before writing architecture notes.
+- **Commands must match the target shell**: when a user requests shell verification, validate every documented command with that shell's parser where practical (for example, `zsh -n -c '...'`), use the matching code fence (`zsh`, `bash`, `sh`), and note what was verified.
 - **Flag unknowns**: if a section has no discoverable content, write `Not documented -- check with the team.` Do not omit the section header.
 - **Scannable in 2 minutes**: keep it tight. This is a reference, not an essay.
 - **CLAUDE.md vs STRUCTURE.md**: `CLAUDE.md` is terse and action-oriented (commands first, bullet lists, things-to-avoid). `STRUCTURE.md` is prose-friendly with full tables and CI details. Do not mix the two formats.
@@ -363,6 +434,8 @@ available at [http://contributor-covenant.org/version/1/4][version].
 
 ## [Performance]
 
+Use these priorities while applying the instructions and templates:
+
 - **Accurate over complete**: a shorter, correct file is more valuable than a long one that contains guesses.
 - **One bundled question**: bundle the style choice with any other uncertainties (e.g., two competing build systems, ambiguous primary language) into a single question -- not a sequence of questions mid-generation.
 - **Single-pass generation**: produce the full file (or both files for Choice 1) in one shot. Do not ask for approval section by section.
@@ -372,6 +445,14 @@ available at [http://contributor-covenant.org/version/1/4][version].
 ---
 
 ## [Example]
+
+### Example Index
+
+- **Trigger routing**: when to infer a documentation choice and when to ask.
+- **Choice 1 compact example**: `CONTRIBUTING.md` + `STRUCTURE.md`.
+- **Choice 2 compact example**: `CLAUDE.md` only.
+- **Choice 3 compact example**: `STRUCTURE.md` only.
+- **Collapsed package tree example**: Java package tree formatting.
 
 ### Trigger routing
 
