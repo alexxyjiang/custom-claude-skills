@@ -1,7 +1,7 @@
 ---
 name: costar-coach
 description: This skill should be used when the user asks to "convert to COSTAR", "make this a COSTAR prompt", "rewrite as COSTAR", "improve this prompt", "structure this prompt", mentions "COSTAR framework", or wants to turn a plain description into a well-structured prompt using the COSTAR methodology (Context, Objective, Style, Tone, Audience, Response).
-version: 1.2.0
+version: 1.2.1
 argument-hint: "[file-path] (optional) -- path to a prompt file to load and optimize using the COSTAR framework"
 ---
 
@@ -49,7 +49,7 @@ Activate when the user:
 
 2. **Clarify missing components** -- If the user hasn't specified all six COSTAR components, ask a focused question to fill the gap rather than guessing. Ask one question at a time; don't bombard the user.
 
-3. **Draft the COSTAR prompt** -- Structure the output with clearly labeled sections for each component. Always embed these behavioral constraints in the draft: the model should be patient and work through issues without rushing; and when something is unclear, it should ask one focused question rather than guess. Place patience in **[Tone]** and the ask-don't-guess rule in **[Style]**, unless the user's input provides a more natural home for them.
+3. **Draft the COSTAR prompt** -- Structure the output with clearly labeled sections for each component. Always prepend a **[Behavioral Rules]** section as the very first block -- before all COSTAR components. Use mandatory imperative language with an explicit prohibition: (1) the agent must stop and ask one focused question before proceeding if anything is ambiguous, (2) the agent must not guess or act on incomplete information, (3) the agent must ask one question at a time. Do **not** bury these constraints inside [Style] or [Tone] prose -- they must appear first, in their own block, as unambiguous directives.
 
 4. **Present the result** -- Show the structured COSTAR prompt in a readable format. Offer to refine any component if the user wants adjustments.
 
@@ -77,6 +77,12 @@ Activate when the user:
 Present the result as:
 
 ```
+[Behavioral Rules]
+- Work patiently -- do not rush to produce output. Take time to fully understand the task before proceeding.
+- STOP if anything in this prompt is ambiguous or underspecified. Ask exactly one focused question and wait for the answer before proceeding.
+- Do NOT guess, assume, or proceed with incomplete information.
+- Ask one question at a time -- never multiple at once.
+
 [Context]
 <background and situation>
 
@@ -111,6 +117,12 @@ The assembled prompt is a single cohesive block the user can copy directly.
 
 **Output:**
 ```
+[Behavioral Rules]
+- Work patiently -- do not rush to produce output. Take time to fully understand the task before proceeding.
+- STOP if anything in this prompt is ambiguous or underspecified. Ask exactly one focused question and wait for the answer before proceeding.
+- Do NOT guess, assume, or proceed with incomplete information.
+- Ask one question at a time -- never multiple at once.
+
 [Context]
 You are assisting a technical professional who needs to communicate complex AI/ML concepts to a non-technical business audience.
 
@@ -118,10 +130,10 @@ You are assisting a technical professional who needs to communicate complex AI/M
 Explain what machine learning is, how it works at a high level, and why it matters for the business -- without using jargon.
 
 [Style]
-Clear, concise prose with an analogy or two to ground abstract concepts. Use short paragraphs. When something is unclear, ask one focused question rather than guess.
+Clear, concise prose with an analogy or two to ground abstract concepts. Use short paragraphs.
 
 [Tone]
-Professional yet approachable. Confident but not condescending. Patient -- work through the reader's confusion step by step without rushing.
+Professional yet approachable. Confident but not condescending.
 
 [Audience]
 A business manager with no technical background in AI or software development.

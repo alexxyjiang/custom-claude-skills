@@ -1,7 +1,7 @@
 ---
 name: crispe-coach
 description: This skill should be used when the user asks to "convert to CRISPE", "make this a CRISPE prompt", "rewrite as CRISPE", "improve this prompt", "structure this prompt", mentions "CRISPE framework", or wants to turn a plain description into a well-structured prompt using the CRISPE methodology (Context, Role, Instruction, Specification, Performance, Example).
-version: 1.2.0
+version: 1.2.1
 argument-hint: "[file-path] (optional) -- path to a prompt file to load and optimize using the CRISPE framework"
 ---
 
@@ -49,7 +49,7 @@ Activate when the user:
 
 2. **Clarify missing components** -- If the user hasn't specified all six CRISPE components, ask a focused question to fill the gap rather than guessing. Ask one question at a time; don't bombard the user.
 
-3. **Draft the CRISPE prompt** -- Structure the output with clearly labeled sections for each component. Always embed these behavioral constraints in the draft: the model should be patient and work through issues without rushing; and when something is unclear, it should ask one focused question rather than guess. Weave patience into **[Role]** and the ask-don't-guess rule into **[Performance]**, unless the user's input provides a more natural home for them.
+3. **Draft the CRISPE prompt** -- Structure the output with clearly labeled sections for each component. Always prepend a **[Behavioral Rules]** section as the very first block -- before all CRISPE components. Use mandatory imperative language with an explicit prohibition: (1) the agent must stop and ask one focused question before proceeding if anything is ambiguous, (2) the agent must not guess or act on incomplete information, (3) the agent must ask one question at a time. Do **not** bury these constraints inside [Role] or [Performance] prose -- they must appear first, in their own block, as unambiguous directives.
 
 4. **Present the result** -- Show the structured CRISPE prompt in a readable format. Offer to refine any component if the user wants adjustments.
 
@@ -77,6 +77,12 @@ Activate when the user:
 Present the result as:
 
 ```
+[Behavioral Rules]
+- Work patiently -- do not rush to produce output. Take time to fully understand the task before proceeding.
+- STOP if anything in this prompt is ambiguous or underspecified. Ask exactly one focused question and wait for the answer before proceeding.
+- Do NOT guess, assume, or proceed with incomplete information.
+- Ask one question at a time -- never multiple at once.
+
 [Context]
 <background and situation>
 
@@ -111,11 +117,17 @@ The assembled prompt is a single cohesive block the user can copy directly.
 
 **Output:**
 ```
+[Behavioral Rules]
+- Work patiently -- do not rush to produce output. Take time to fully understand the task before proceeding.
+- STOP if anything in this prompt is ambiguous or underspecified. Ask exactly one focused question and wait for the answer before proceeding.
+- Do NOT guess, assume, or proceed with incomplete information.
+- Ask one question at a time -- never multiple at once.
+
 [Context]
 You are assisting a technical professional who needs to communicate complex AI/ML concepts to a non-technical business audience.
 
 [Role]
-Act as a senior technology communicator with 10+ years of experience translating engineering concepts for executive stakeholders. Patient in handling confusion -- work through issues step by step without rushing. Ask one focused question when intent or scope is unclear rather than guessing.
+Act as a senior technology communicator with 10+ years of experience translating engineering concepts for executive stakeholders.
 
 [Instruction]
 Explain what machine learning is, how it works at a high level, and why it matters for the business -- without using jargon.
@@ -124,7 +136,7 @@ Explain what machine learning is, how it works at a high level, and why it matte
 Clear, concise prose. Use one or two grounding analogies. Short paragraphs. Avoid acronyms. Suitable for an email or a single slide note. 200-300 words.
 
 [Performance]
-A non-technical reader should finish this and be able to explain the concept in their own words. No sentence should require a CS background to parse. When the audience or scope is ambiguous, ask rather than guess.
+A non-technical reader should finish this and be able to explain the concept in their own words. No sentence should require a CS background to parse.
 
 [Example]
 "Think of machine learning like teaching a dog new tricks -- except instead of treats, the model learns from thousands of examples until it can recognise patterns on its own. Once trained, it can spot those patterns in data it has never seen before."
