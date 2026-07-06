@@ -4,7 +4,7 @@
     "email": "alexxyjiang@gmail.com"
   },
   "name": "crispe-system-architect-plugin",
-  "description": "Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles: Choice 1 (CONTRIBUTING.md + STRUCTURE.md -- contribution guide alongside a separate structure reference), Choice 2 (CLAUDE.md -- single merged AI context file), Choice 3 (STRUCTURE.md only -- structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- updates the one that already exists, or creates STRUCTURE.md if none is present. Triggers proactively before code changes when no documentation file exists, and explicitly when the user asks to analyze a repo, generate STRUCTURE.md/CLAUDE.md/CONTRIBUTING.md, summarize the codebase, or document the project structure.",
+  "description": "Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says \"analyze this repo\", \"generate STRUCTURE.md\", \"generate CLAUDE.md\", \"generate CONTRIBUTING.md\", \"summarize the codebase\", \"document the project structure\", \"what is the architecture of this project\", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.",
   "keywords": [
     "crispe",
     "architecture",
@@ -16,5 +16,5 @@
     "onboarding",
     "contributing"
   ],
-  "version": "1.2.0"
+  "version": "1.2.1"
 }

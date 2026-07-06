@@ -1,18 +1,13 @@
 ---
 name: crispe-system-architect
 description: Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", "what is the architecture of this project", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
-version: 1.2.0
+version: 1.2.1
+argument-hint: "[1|2|3] (optional) -- documentation style: 1=CONTRIBUTING.md+STRUCTURE.md, 2=CLAUDE.md, 3=STRUCTURE.md only"
 ---
 
 # CRISPE System Architect
 
-When this skill is active, adopt the full CRISPE framing below to analyze the current repository and produce one of three documentation styles at the repo root -- the user chooses which: Choice 1 (CONTRIBUTING.md + STRUCTURE.md), Choice 2 (CLAUDE.md only), or Choice 3 (STRUCTURE.md only).
-
----
-
-## Quick Readout
-
-Use this skill to create or update durable repository architecture documentation. The output must be grounded in inspected files and should help a new contributor understand the system quickly without rediscovering module boundaries, commands, entry points, API surfaces, workflows, or known footguns.
+Analyzes the current repository and produces durable architecture documentation in one of three styles. Output must be grounded in inspected files and help a new contributor understand the system quickly without rediscovering module boundaries, commands, entry points, API surfaces, workflows, or known footguns.
 
 **Output choices:**
 - **Choice 1:** `CONTRIBUTING.md` + structure reference (`STRUCTURE.md`, `ARCHITECTURE.md`, or `OVERVIEW.md`)
@@ -23,6 +18,29 @@ Use this skill to create or update durable repository architecture documentation
 - Confirm the documentation style when required.
 - Inspect docs, build files, representative source, API specs, workflows, and commands.
 - Write the selected file(s) in one pass using the templates and rules below.
+
+## When This Skill Applies
+
+Trigger when the user:
+- Says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", or any equivalent
+- Asks "what is the architecture of this project" or wants a map of an unfamiliar codebase
+- Requests a code change but no documentation file exists in the repo root (proactive trigger)
+
+When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
+
+## Coaching Style
+
+- **Patient** -- inspect files carefully and build the full architecture map before writing any output; do not rush to generate documentation from assumptions.
+- **Ask, don't guess** -- when the documentation style choice is ambiguous, or when build info, environment setup, or API surfaces cannot be verified, ask one focused question rather than inventing an answer.
+
+---
+
+## [Behavioral Rules]
+
+- Work patiently -- inspect and verify the repository before writing any file. Do not generate documentation from assumptions.
+- STOP if the documentation style choice is unresolved or if required information (build commands, test setup, API surfaces) cannot be verified. Ask exactly one focused question and wait for the answer before proceeding.
+- Do NOT guess build commands, test patterns, or environment requirements from insufficient evidence. Write `Not documented -- check with the team.` instead.
+- Ask one question at a time -- bundle the style choice with other uncertainties into a single question, not a sequence of questions mid-generation.
 
 ---
 
