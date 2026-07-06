@@ -1,119 +1,103 @@
 ---
 name: prompt-convert-trigger
-description: Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when the user describes scenarios with 3+ distinct steps, multiple conditions, vague/open-ended requirements, tasks spanning multiple files or systems, or work requiring both research and implementation. Make sure to use this skill whenever you notice the user's request involves complexity that would benefit from structured planning - don't wait for them to explicitly ask for COSTAR or CRISPE conversion.
+description: Automatically detects tasks that would benefit from structured prompt engineering and converts them into COSTAR or CRISPE prompts. Triggers proactively when the user's request involves complexity, vagueness, multi-step work, or spans multiple concerns. Make sure to use this skill whenever you notice the user's request would benefit from structured planning — don't wait for them to explicitly ask.
+version: 1.1.0
+argument-hint: "[framework] (optional) -- force a specific framework (costar|crispe); auto-detected from request signals if omitted"
 ---
 
 # Prompt Convert Trigger
 
-## Capacity and Role
+## Context
 
-You are an intelligent task complexity detector and prompt engineering advisor. Your role is to:
-- Recognize when user requests are complex enough to benefit from structured prompting
-- Recommend the most appropriate framework (COSTAR or CRISPE) based on task characteristics
-- Delegate to the chosen coaching skill to convert the request into a well-structured prompt
+You are operating inside a Claude Code session where the user is about to give you a task. Before diving in, you have the opportunity to detect whether the request would benefit from structured prompt engineering — and if so, recommend a framework and delegate to the appropriate coach skill.
 
-## Insight
+Complex or vague tasks frequently underperform because requirements are incomplete, success criteria are unclear, or the scope isn't fully surfaced. Structured frameworks like COSTAR and CRISPE solve this by forcing requirements into explicit, reviewable sections before work begins.
 
-Complex tasks often fail or produce suboptimal results when approached without clear structure. Users may not realize their request involves multiple dimensions of complexity. By proactively detecting these signals and applying structured prompt engineering frameworks, you help ensure:
-- Requirements are fully captured and clarified
-- Success criteria are explicitly defined
-- Implementation steps are logically organized
-- The right tools and approaches are selected upfront
+## Objective
 
-Different task types benefit from different frameworks:
-- **COSTAR** excels at creative, user-facing, and design-oriented tasks
-- **CRISPE** excels at technical, data-focused, and backend engineering tasks
+Proactively scan every incoming user request for signals that structured planning would improve outcomes. Detect which framework fits best, default to COSTAR when ambiguous, and ask the user for confirmation before delegating.
 
-## Statement
+Your detection must be lightweight and non-disruptive: one brief recommendation, then immediate hand-off.
 
-When you detect a user request with ANY of these complexity signals, trigger this skill proactively:
+## Style
 
-1. **Multi-step tasks**: 3+ distinct sequential or parallel steps required
-2. **Multiple conditions**: Several requirements, constraints, or conditional logic branches
-3. **Vague or open-ended requirements**: Lacks specificity, needs clarification and structure
-4. **Multi-file or multi-system scope**: Spans multiple files, directories, services, or external systems
-5. **Research + Implementation combo**: Requires both investigation/analysis AND code changes
-6. **Ambiguous success criteria**: Unclear what "done" looks like without breaking down requirements
+Concise and advisory. Two to three sentences maximum per recommendation. Do not lecture — one clear signal and one clear recommendation is enough.
 
-### Decision Logic for Framework Selection
+## Tone
 
-Choose the framework based on task characteristics:
+Helpful and proactive, but never pushy. If the user declines or says "just do it", respect that immediately and proceed with the task as-is.
 
-**Recommend COSTAR for:**
-- UI/UX features and user-facing components
-- Product features with user interaction
-- Documentation, content creation, or writing tasks
-- Design-focused or creative implementation
-- Tasks where user experience is central
+## Audience
 
-**Recommend CRISPE for:**
-- PySpark jobs, data pipelines, or ETL workflows
-- Backend API development
-- Database queries and data transformations
-- Infrastructure or DevOps tasks
-- Technical investigations or debugging
-- System integration work
+The Claude agent reading this skill definition. These are internal instructions for how Claude should behave, not content for the end user.
+
+## Response
+
+### Framework Selection
+
+**Default to COSTAR** when the task type is ambiguous or doesn't clearly fit CRISPE signals.
+
+#### Trigger COSTAR when the request involves:
+- UI, UX, or user-facing features
+- Product features with user interaction (forms, flows, dashboards)
+- Documentation, writing, or content generation
+- Design decisions, architecture, or creative direction
+- Refactoring or "clean up" without a specific technical target
+- Any request with a stakeholder, user impact, or release signal ("users see", "for the release")
+- Vague improvement verbs with no technical specificity: *improve*, *make it better*, *clean up*, *polish*
+
+#### Trigger CRISPE when the request involves:
+- PySpark, Spark SQL, or data pipeline work
+- Backend API development or database queries
+- Data transformations, ETL, or HDFS/warehouse operations
+- Infrastructure, DevOps, or CI/CD tasks
+- Technical investigation or root-cause debugging
+- System integration or inter-service wiring
+- Vague verbs pointing at a technical domain: *investigate*, *debug*, *profile*, *optimize throughput*
+
+### General Trigger Signals (apply to both frameworks)
+
+**Strong signals** — trigger on any one of these alone:
+
+1. **Multi-goal phrasing**: Two or more distinct outcomes — e.g., "fix X and also make Y work"
+2. **3+ bullets or numbered items**: User enumerates the task in three or more points
+3. **Spans 2+ files, modules, or systems**: Task crosses a file or service boundary
+4. **Research + change combo**: Requires both investigation AND a code or config change
+
+**Soft signals** — consider triggering when these appear, especially in combination:
+
+5. **Uncertain framing**: "I think", "not sure how to", "the issue might be", "ideally", "somehow"
+6. **Vague action verbs with no clear spec**: *improve*, *refactor*, *set up*, *handle*, *make it work*
+7. **Stakeholder or impact signal**: "users see", "for the release", "the team needs by Thursday"
 
 ### Execution Flow
 
-1. **Detect complexity** by analyzing the user's request against the signals above
-2. **Determine best framework** using the decision logic
-3. **Present recommendation** to the user:
+1. Detect any signal from the lists above
+2. Select framework: COSTAR or CRISPE — default to COSTAR when unsure
+3. Present a brief recommendation:
    ```
-   I notice this task involves [specific signals: e.g., "multiple steps, spanning frontend and backend files"].
-
-   This would benefit from structured planning using the [COSTAR/CRISPE] framework, which is well-suited for [reason: e.g., "user-facing features with multiple interaction points"].
-
-   Would you like me to convert this into a structured prompt using [recommended framework], or would you prefer [alternative framework]?
+   This looks like it could benefit from [COSTAR/CRISPE] — it involves [one-line reason].
+   Want me to structure it first, or should I just dive in?
    ```
-4. **Delegate immediately** based on user agreement:
-   - If user chooses COSTAR → invoke `/costar-coach` skill
-   - If user chooses CRISPE → invoke `/crispe-coach` skill
-5. **Hand off completely** - your work ends here; the coach and executor skills take over
+4. On user agreement → invoke the chosen coach skill (`/costar-coach` or `/crispe-coach`)
+5. Hand off completely — your role ends here
 
-## Personality
+### Examples
 
-- **Proactive**: Don't wait for users to ask for structured prompting - detect and recommend automatically
-- **Helpful but not pushy**: Make clear recommendations but allow users to decline or choose differently
-- **Concise**: Keep your recommendation brief (2-3 sentences maximum)
-- **Respectful of user choice**: If they say "no thanks, just do it", proceed with the task directly without structured conversion
+| Request | Signal | Framework |
+|---|---|---|
+| "Add auth to our React app with JWT and role-based permissions" | Multi-goal + multi-file + user-facing | COSTAR |
+| "Refactor the payment module to be more maintainable" | Vague verb, no spec | COSTAR (default) |
+| "We need this ready for Thursday's release" | Stakeholder/timeline signal | COSTAR (default) |
+| "Write a PySpark job that reads HDFS, filters, joins, outputs Parquet" | Data pipeline, multi-step | CRISPE |
+| "Investigate the API latency spike and fix it" | Technical investigation + change | CRISPE |
+| "I think the issue might be in the auth middleware" | Uncertain framing + technical domain | CRISPE |
 
-## Experiment
+### Should NOT Trigger
 
-Test your detection with these examples:
-
-**Should trigger (with recommended framework):**
-
-1. "Add authentication to our React app with JWT tokens, role-based permissions, and a login flow"
-   - Signals: Multi-step, multi-file (backend + frontend), user-facing
-   - Recommend: COSTAR
-
-2. "Write a PySpark job that reads HDFS data, filters by date range, joins with dimension tables, aggregates by category, and outputs to Parquet"
-   - Signals: Multi-step pipeline, multiple conditions, data processing
-   - Recommend: CRISPE
-
-3. "Refactor the payment processing module to be more maintainable"
-   - Signals: Vague requirements, unclear success criteria
-   - Recommend: COSTAR (design/architecture focus with potential user impact)
-
-4. "Investigate why the API latency spiked yesterday and implement a fix"
-   - Signals: Research + implementation combo
-   - Recommend: CRISPE (technical investigation)
-
-5. "Build a dashboard showing sales metrics by region with filters and export functionality"
-   - Signals: Multi-step, multiple requirements, user-facing
-   - Recommend: COSTAR
-
-**Should NOT trigger:**
-
-1. "Fix the typo on line 42 in README.md" (single, trivial task)
-2. "Read the error logs and tell me what went wrong" (single-step, no implementation)
-3. "Add a console.log to debug this function" (simple, one-line change)
-4. "What files handle authentication?" (exploratory question, not a task)
-
-## Key Reminders
-
-- Trigger proactively - complexity detection is your primary value
-- Be decisive in your framework recommendation but flexible with user preference
-- After delegating to coach skill, step back completely
-- If user explicitly declines structured prompting, respect that and proceed normally
+| Request | Reason |
+|---|---|
+| "Fix the typo on line 42 in README.md" | Single, trivial, fully specified |
+| "Add a console.log to debug this function" | One-line, no ambiguity |
+| "What files handle authentication?" | Exploratory question, no task |
+| "Run the tests" | Mechanical, nothing to clarify |
