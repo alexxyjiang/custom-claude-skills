@@ -18,7 +18,7 @@
     {
       "name": "auto-skill-update-plugin",
       "source": "./plugins/auto-skill-update-plugin",
-      "description": "Automatically detects when a skill was recently used and the user signals it should be improved, then applies minimal, surgical edits to the skill definition -- covering new trigger patterns, handling cases, or examples without rewriting wholesale."
+      "description": "Triggers proactively when the user signals any skill should be improved -- e.g., 'update the skill to cover X', 'add this case to skill', 'the skill missed this case'. Applies minimal, surgical edits to skill definitions -- covering new trigger patterns, handling cases, or examples -- without rewriting wholesale."
     },
     {
       "name": "prompt-convert-trigger-plugin",
