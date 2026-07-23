@@ -1,7 +1,7 @@
 ---
 name: crispe-system-architect
-description: Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Language-suffixed variants (e.g., STRUCTURE.zh-CN.md) are also equivalent; any one variant is sufficient to consider the document present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", "what is the architecture of this project", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
-version: 1.3.0
+description: Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Language-suffixed variants (e.g., STRUCTURE.zh-CN.md) are also equivalent; any one variant is sufficient to consider the document present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", "what is the architecture of this project", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. Also triggers on Chinese equivalents: "分析这个仓库", "分析代码库", "生成STRUCTURE.md", "生成CLAUDE.md", "生成CONTRIBUTING.md", "生成架构文档", "生成项目文档", "总结代码库", "梳理项目结构", "整理项目结构", "文档化项目结构", "这个项目的架构是什么", "帮我了解这个代码库", "项目结构分析", or any equivalent phrasing in any language. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
+version: 1.4.0
 argument-hint: "[1|2|3] (optional) -- documentation style: 1=CONTRIBUTING.md+STRUCTURE.md, 2=CLAUDE.md, 3=STRUCTURE.md only"
 ---
 
@@ -22,9 +22,17 @@ Analyzes the current repository and produces durable architecture documentation 
 ## When This Skill Applies
 
 Trigger when the user:
-- Says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", or any equivalent
+- Says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", or any equivalent in any language
 - Asks "what is the architecture of this project" or wants a map of an unfamiliar codebase
 - Requests a code change but no documentation file exists in the repo root (proactive trigger)
+
+**Chinese trigger phrases (中文触发短语):**
+- "分析这个仓库" / "分析代码库" / "分析项目结构"
+- "生成STRUCTURE.md" / "生成CLAUDE.md" / "生成CONTRIBUTING.md"
+- "生成架构文档" / "生成项目文档" / "生成结构文档"
+- "总结代码库" / "梳理项目结构" / "整理项目结构" / "文档化项目结构"
+- "这个项目的架构是什么" / "帮我了解这个代码库" / "项目结构分析"
+- 或任何等效的中文表达（如"帮我看看这个仓库的结构"、"给这个项目写个架构说明"）
 
 When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
 
@@ -534,12 +542,17 @@ Use these priorities while applying the instructions and templates:
 **Safe to infer (no question needed):**
 - User: "generate a CLAUDE.md" -> `$DOC_CHOICE = 2`. Run Steps 2-5, write `CLAUDE.md`.
 - User: "generate CONTRIBUTING.md and STRUCTURE.md" -> `$DOC_CHOICE = 1`. Run Steps 2-5, write both.
+- User: "生成CLAUDE.md" / "帮我生成一个CLAUDE.md" -> `$DOC_CHOICE = 2`. Run Steps 2-5, write `CLAUDE.md`.
+- User: "生成CONTRIBUTING.md和STRUCTURE.md" -> `$DOC_CHOICE = 1`. Run Steps 2-5, write both.
 
 **Must ask (ambiguous -- do not guess):**
 - User: "generate STRUCTURE.md" -> ambiguous; Choice 1 also produces `STRUCTURE.md`. Ask the three-choice question.
 - User: "generate ARCHITECTURE.md" -> same ambiguity. Ask.
 - User: "generate CONTRIBUTING.md" -> no standalone choice for CONTRIBUTING.md only; could be Choice 1. Ask.
 - User: "analyze this repo" / "document the project" / "summarize the codebase" -> no file named. Ask.
+- User: "分析这个仓库" / "分析代码库" / "梳理项目结构" / "总结代码库" -> no file named. Ask.
+- User: "生成架构文档" / "生成项目文档" / "生成结构文档" -> ambiguous. Ask.
+- User: "这个项目的架构是什么" / "帮我了解这个代码库" -> no file named. Ask.
 
 **Proactive detection:**
 - User: "add a new REST endpoint for search suggestions"
@@ -549,6 +562,13 @@ Use these priorities while applying the instructions and templates:
   > - Choice 2: CLAUDE.md
   > - Choice 3: STRUCTURE.md only
   > Or skip and start on the endpoint?"
+- User: "给登录接口加个限流逻辑"
+- Check for docs: nothing found -> ask (respond in Chinese matching the user's language):
+  > "我没有看到这个仓库里有任何文档（STRUCTURE.md、CLAUDE.md 或 CONTRIBUTING.md 等）。要我先生成一份吗？
+  > - 方案 1：CONTRIBUTING.md + STRUCTURE.md（贡献指南 + 结构参考，两个文件）
+  > - 方案 2：CLAUDE.md（AI 上下文文件，合并格式）
+  > - 方案 3：仅 STRUCTURE.md（结构参考，无贡献指南）
+  > 或者直接跳过，开始写限流逻辑？"
 
 ---
 
