@@ -1,7 +1,7 @@
 ---
 name: crispe-system-architect
-description: Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", "what is the architecture of this project", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
-version: 1.2.1
+description: Expert program architecture analyzer that generates documentation for any code repository. Supports three output styles -- Choice 1: CONTRIBUTING.md + STRUCTURE.md (contribution guide alongside a separate structure reference), Choice 2: CLAUDE.md (single merged AI context file), Choice 3: STRUCTURE.md only (structure reference without a contribution guide). STRUCTURE.md, ARCHITECTURE.md, and OVERVIEW.md are treated as equivalent -- update the one that already exists, or create STRUCTURE.md if none is present. Language-suffixed variants (e.g., STRUCTURE.zh-CN.md) are also equivalent; any one variant is sufficient to consider the document present. Trigger this skill proactively when the user requests a code change but no documentation file exists in the repo root. Also trigger explicitly when the user says "analyze this repo", "generate STRUCTURE.md", "generate CLAUDE.md", "generate CONTRIBUTING.md", "summarize the codebase", "document the project structure", "what is the architecture of this project", or any equivalent phrasing about understanding or mapping an unfamiliar codebase. When in doubt, trigger -- generating an architectural reference once saves every future contributor from re-discovering the same things.
+version: 1.3.0
 argument-hint: "[1|2|3] (optional) -- documentation style: 1=CONTRIBUTING.md+STRUCTURE.md, 2=CLAUDE.md, 3=STRUCTURE.md only"
 ---
 
@@ -94,7 +94,7 @@ If they choose a style, record the answer as `$DOC_CHOICE` (1, 2, or 3) and proc
 
 **1a. Scan** the repo root for `STRUCTURE.md`, `ARCHITECTURE.md`, `OVERVIEW.md`, `CLAUDE.md`, and `CONTRIBUTING.md`.
 
-**1b. Resolve `$STRUCTURE_FILE`**: whichever of `STRUCTURE.md`, `ARCHITECTURE.md`, `OVERVIEW.md` already exists becomes `$STRUCTURE_FILE` (it will be updated). If none exists, `$STRUCTURE_FILE = STRUCTURE.md` (will be created).
+**1b. Resolve `$STRUCTURE_FILE`**: Scan for these names (including any language-suffixed variant such as `STRUCTURE.zh-CN.md`, `ARCHITECTURE.zh-CN.md`, or `OVERVIEW.zh-CN.md`). The priority order is: `STRUCTURE.md` (or its variants) → `ARCHITECTURE.md` (or its variants) → `OVERVIEW.md` (or its variants). Whichever file is found first becomes `$STRUCTURE_FILE` and will be updated in place. If multiple language variants of the same base name exist (e.g., both `STRUCTURE.md` and `STRUCTURE.zh-CN.md`), all of them are updated. If none exists, `$STRUCTURE_FILE = STRUCTURE.md` (will be created).
 
 **1c. Confirm `$DOC_CHOICE`** -- this must be confirmed before checking any existing files. If `$DOC_CHOICE` was already set in Step 0 (proactive path), skip to 1d. Otherwise, apply the table below exactly -- do not guess outside these cases:
 
@@ -138,6 +138,7 @@ Read these files if they exist: `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, 
 - Explicit code style rules and formatting requirements
 - Contribution workflow (branch naming, PR process, review requirements)
 - Any stated restrictions (e.g., dependency direction rules, forbidden patterns)
+- Embedded frontend assets: if a `package.json` exists inside a subdirectory (not the repo root), note the package name, npm scripts (especially `dev`, `build`, `preview`), key framework dependencies, entry routes, and how the build output is merged into the backend artifact
 
 #### Step 4: Infer implicit conventions
 
@@ -208,6 +209,21 @@ Use exactly one output path based on `$DOC_CHOICE`:
 - `path/` -- one-line description
 - `path/` -- one-line description
 
+## Module Responsibilities
+
+*(Include this section for multi-module builds -- Maven reactor, npm workspaces, Cargo workspace, Go modules. Omit for single-module repos.)*
+
+### `<module-name>`
+
+[One-line purpose.]
+
+Key areas:
+
+- `package.or.path`: description
+- `ClassName`: role in the system
+
+*(Repeat per module.)*
+
 ## Code Style Guidelines
 
 ### Explicit Rules
@@ -226,6 +242,9 @@ Use exactly one output path based on `$DOC_CHOICE`:
 
 ## Core Request/Data Flow
 
+*(When the repo exposes a single API surface, one diagram is sufficient. When multiple distinct API groups exist -- e.g., GraphQL, gRPC, REST -- add one named subsection per group. Highlight per-group divergence in error handling, response building, or auth.)*
+
+### [API Group Name, e.g., GraphQL]
 
 \`\`\`text
 [client/input]
@@ -235,9 +254,36 @@ Use exactly one output path based on `$DOC_CHOICE`:
   -> [response/output converter]
 \`\`\`
 
+*(Add a ### subsection for each additional API group. Omit groups that share an identical flow path.)*
+
 ## Capabilities, Workflows, or Core Components
 
-[For capability/plugin/task/workflow architectures, list each existing implementation with its type, default version or mode if applicable, data source/dependencies, active wiring status, and known exposure gaps. For simpler repos, describe core services/components instead.]
+*(For capability/plugin/task/workflow architectures, use the per-entry structure below. For simpler repos, use a prose description of core services/components instead.)*
+
+### `CapabilityOrComponentName`
+
+- **Package**: `com.example.package.path`
+- **Type / enum value**: `CAPABILITY_TYPE_FOO` (or the equivalent registration key)
+- **Default version**: `version_string`
+- **Other supported versions**: `alt_v1`, `alt_v2` *(omit if only one version)*
+- **Data source selection**: which version suffixes or flags route to which data source (e.g., local fixture vs. remote store)
+- **Main collaborators**: class or service names this capability delegates to
+- **Behavior**: one-paragraph description of what it does end-to-end
+- **Output detection**: the guard that causes the capability to skip when output already exists (quote the key field or method)
+- **Workflow wiring**: which workflow config files include this capability; flag any that are implemented but not wired, or wired but not schema-exposed
+
+*(Repeat per capability. Always distinguish: registered-in-code, included-in-workflow-config, and exposed-via-API-schema -- these three states are independent.)*
+
+## Core Data Models
+
+*(Include when the repo uses generated contract classes or has a non-obvious domain model hierarchy. Omit for CRUD repos where the model is obvious from the DB schema.)*
+
+| Class | Source | Role |
+|-------|--------|------|
+| `ExternalRequestClass` | generated / external artifact | external request envelope |
+| `InternalModelClass` | hand-written | central pipeline model |
+
+*(Mark generated classes and their artifact/package origin. Note any deprecated model classes that still exist for legacy callers.)*
 
 ## Build & Environment Setup
 
@@ -277,6 +323,17 @@ Use exactly one output path based on `$DOC_CHOICE`:
 ### CI/CD
 
 [One-line summary of CI setup, e.g., "GitHub Actions -- see `.github/workflows/`. PRs require passing `build` and `test` jobs."]
+
+## Embedded UI / Frontend
+
+*(Include only when a frontend app is embedded inside the backend build -- e.g., a React/Vite app under a `portal/` or `static/` subdirectory. Omit for pure backend repos or separate frontend repos.)*
+
+- **Location**: `path/to/frontend/`
+- **Build tool**: Vite / CRA / Next.js / etc.
+- **How it merges**: how the frontend build output lands in the backend artifact (Maven `prepare-package`, Gradle task, etc.)
+- **Local dev command**: `npm run dev` (with any proxy target)
+- **Key dependencies**: framework, routing, state management, UI library
+- **Active routes / modules**: one line per route or page module
 
 ## Notes for Contributors
 
