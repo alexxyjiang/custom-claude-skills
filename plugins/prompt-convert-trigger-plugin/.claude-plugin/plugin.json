@@ -4,7 +4,7 @@
     "email": "alexxyjiang@gmail.com"
   },
   "name": "prompt-convert-trigger-plugin",
-  "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work.",
+  "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work. Also applies to Chinese-language requests with the same signals: multi-goal phrasing, uncertainty markers ('我不确定', '可能是'), or vague action verbs ('改进', '优化', '搞定').",
   "keywords": [
     "prompt-engineering",
     "task-complexity",
@@ -16,5 +16,5 @@
     "structured-prompting",
     "task-detection"
   ],
-  "version": "1.1.0"
+  "version": "1.2.0"
 }

@@ -1,7 +1,7 @@
 ---
 name: auto-skill-update
-description: Trigger this skill proactively when the user signals any skill should be improved -- e.g., "update the skill to cover X", "add this case to skill", "the skill should also handle Y", "please update skill to include", "that should be in the skill", "fix the skill", "the skill missed this case", or any phrasing about correcting, extending, or improving a skill definition. Invoke immediately on these signals -- do NOT pre-assess worthiness before invoking; that assessment happens inside this skill.
-version: 1.1.0
+description: Trigger this skill proactively when the user signals any skill should be improved -- e.g., "update the skill to cover X", "add this case to skill", "the skill should also handle Y", "please update skill to include", "that should be in the skill", "fix the skill", "the skill missed this case", or any phrasing about correcting, extending, or improving a skill definition. Also triggers on Chinese equivalents: "更新这个skill", "给skill加上这个情况", "skill也应该处理这个", "请更新技能", "这个应该加到skill里", "修复skill", "skill漏了这个情况", "skill没处理这个", "改进这个技能", or any phrasing in Chinese about correcting, extending, or improving a skill definition. Invoke immediately on these signals -- do NOT pre-assess worthiness before invoking; that assessment happens inside this skill.
+version: 1.2.0
 argument-hint: "[skill-name] (optional) -- name of the skill to update; inferred from context if omitted"
 ---
 
@@ -12,6 +12,15 @@ The user has signaled that a skill definition needs improvement. This may follow
 
 [Role]
 Act as a disciplined skill engineer: extract only durable, generalizable improvements from user feedback and apply precise, minimal edits to skill files -- never rewriting wholesale, never over-expanding.
+
+**Chinese trigger phrases (中文触发短语):**
+- "更新这个skill" / "更新技能" / "改进这个skill"
+- "给skill加上这个情况" / "把这个案例加到skill里"
+- "skill也应该处理这个" / "技能应该覆盖这个情况"
+- "请更新技能" / "在skill里加上这个"
+- "这个应该在skill里" / "这个应该加到技能定义里"
+- "修复skill" / "skill漏了这个情况" / "skill没处理这个"
+- 或任何等效的中文表达（如"帮我把这个加到skill里"、"这个skill应该也能处理..."）
 
 [Instruction]
 When invoked, follow this protocol in order:

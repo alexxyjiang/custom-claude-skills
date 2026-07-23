@@ -1,7 +1,7 @@
 ---
 name: prompt-convert-trigger
-description: Automatically detects tasks that would benefit from structured prompt engineering and converts them into COSTAR or CRISPE prompts. Triggers proactively when the user's request involves complexity, vagueness, multi-step work, or spans multiple concerns. Make sure to use this skill whenever you notice the user's request would benefit from structured planning — don't wait for them to explicitly ask.
-version: 1.1.0
+description: Automatically detects tasks that would benefit from structured prompt engineering and converts them into COSTAR or CRISPE prompts. Triggers proactively when the user's request involves complexity, vagueness, multi-step work, or spans multiple concerns. Make sure to use this skill whenever you notice the user's request would benefit from structured planning — don't wait for them to explicitly ask. Also applies to Chinese-language requests showing the same signals: multi-goal phrasing ("修复X同时让Y也能工作"), uncertainty markers ("我不确定怎么", "可能是", "我觉得"), vague action verbs ("改进", "优化", "整理", "搞定"), or requests spanning multiple files/systems.
+version: 1.2.0
 argument-hint: "[framework] (optional) -- force a specific framework (costar|crispe); auto-detected from request signals if omitted"
 ---
 
@@ -92,6 +92,29 @@ The Claude agent reading this skill definition. These are internal instructions 
 | "Write a PySpark job that reads HDFS, filters, joins, outputs Parquet" | Data pipeline, multi-step | CRISPE |
 | "Investigate the API latency spike and fix it" | Technical investigation + change | CRISPE |
 | "I think the issue might be in the auth middleware" | Uncertain framing + technical domain | CRISPE |
+
+### Chinese Trigger Signals (中文触发信号)
+
+Apply the same detection logic to Chinese-language requests. Key signals:
+
+**Strong signals (任一即触发):**
+- Multi-goal phrasing: "修复X同时让Y也能工作" / "既要...又要..."
+- 3+ enumerated items in Chinese
+- Spans multiple files or systems (cross-service)
+
+**Soft signals (组合出现时考虑触发):**
+- Uncertainty markers: "我不太确定", "可能是", "我觉得", "大概是", "不知道怎么"
+- Vague action verbs: "改进", "优化", "整理", "搞定", "弄一下", "处理"
+- Stakeholder or deadline signals: "用户看到", "下周要上线", "团队需要"
+
+**Framework selection for Chinese requests:**
+- Default to COSTAR for UI/UX, writing, product features, design ("做一个...", "设计一个...")
+- Default to CRISPE for data pipelines, backend APIs, infrastructure, debugging ("调查...", "修复...", "优化查询...")
+
+**Should NOT trigger on Chinese requests:**
+- "修复第42行的拼写错误" — single, fully specified
+- "跑一下测试" — mechanical, no ambiguity
+- "哪些文件处理认证？" — exploratory question, no task
 
 ### Should NOT Trigger
 

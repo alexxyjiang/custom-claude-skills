@@ -8,22 +8,22 @@
     {
       "name": "costar-coach-plugin",
       "source": "./plugins/costar-coach-plugin",
-      "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response). Coaches patiently -- asks one focused question when a component is missing rather than guessing -- and embeds the same patient, ask-don't-guess behavior into every generated prompt. Offers to execute the prompt immediately after presenting it."
+      "description": "Converts rough descriptions or ideas into well-structured prompts using the COSTAR framework (Context, Objective, Style, Tone, Audience, Response). Coaches patiently -- asks one focused question when a component is missing rather than guessing -- and embeds the same patient, ask-don't-guess behavior into every generated prompt. Offers to execute the prompt immediately after presenting it. Also triggers on Chinese equivalents: '转成COSTAR格式', '用COSTAR框架改写', '优化这个提示词'."
     },
     {
       "name": "crispe-coach-plugin",
       "source": "./plugins/crispe-coach-plugin",
-      "description": "Converts rough descriptions or ideas into well-structured prompts using the CRISPE framework (Context, Role, Instruction, Specification, Performance, Example). Coaches patiently -- asks one focused question when a component is missing rather than guessing -- and embeds the same patient, ask-don't-guess behavior into every generated prompt. Offers to execute the prompt immediately after presenting it."
+      "description": "Converts rough descriptions or ideas into well-structured prompts using the CRISPE framework (Context, Role, Instruction, Specification, Performance, Example). Coaches patiently -- asks one focused question when a component is missing rather than guessing -- and embeds the same patient, ask-don't-guess behavior into every generated prompt. Offers to execute the prompt immediately after presenting it. Also triggers on Chinese equivalents: '转成CRISPE格式', '用CRISPE框架改写', '优化这个提示词'."
     },
     {
       "name": "auto-skill-update-plugin",
       "source": "./plugins/auto-skill-update-plugin",
-      "description": "Triggers proactively when the user signals any skill should be improved -- e.g., 'update the skill to cover X', 'add this case to skill', 'the skill missed this case'. Applies minimal, surgical edits to skill definitions -- covering new trigger patterns, handling cases, or examples -- without rewriting wholesale."
+      "description": "Triggers proactively when the user signals any skill should be improved -- e.g., 'update the skill to cover X', 'add this case to skill', 'the skill missed this case'. Also triggers on Chinese equivalents: '更新这个skill', 'skill漏了这个情况', '给skill加上这个情况'. Applies minimal, surgical edits to skill definitions -- covering new trigger patterns, handling cases, or examples -- without rewriting wholesale."
     },
     {
       "name": "prompt-convert-trigger-plugin",
       "source": "./plugins/prompt-convert-trigger-plugin",
-      "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work."
+      "description": "Automatically detects complex or multi-step tasks and converts them into structured COSTAR or CRISPE prompts. Triggers proactively when user requests involve 3+ steps, multiple conditions, vague requirements, multi-file scope, or research plus implementation work. Also applies to Chinese-language requests with the same signals: multi-goal phrasing, uncertainty markers ('我不确定', '可能是'), or vague action verbs ('改进', '优化', '搞定')."
     },
     {
       "name": "crispe-system-architect-plugin",
