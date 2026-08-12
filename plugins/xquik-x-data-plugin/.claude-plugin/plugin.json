@@ -1,0 +1,18 @@
+{
+  "author": {
+    "name": "Xquik-dev",
+    "url": "https://github.com/Xquik-dev/x-twitter-scraper"
+  },
+  "name": "xquik-x-data-plugin",
+  "description": "Routes public X data workflows through Xquik MCP or REST with source checks, private credentials, and confirmation-gated writes.",
+  "keywords": [
+    "xquik",
+    "x-twitter",
+    "x-data",
+    "mcp",
+    "rest-api",
+    "monitoring",
+    "exports"
+  ],
+  "version": "1.0.0"
+}
